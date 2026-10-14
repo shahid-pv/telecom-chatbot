@@ -1,0 +1,22 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.model.google.genai.autoconfigure.embedding.GoogleGenAiTextEmbeddingAutoConfiguration
+      - org.springframework.ai.model.google.genai.autoconfigure.embedding.GoogleGenAiEmbeddingConnectionAutoConfiguration
+  ai:
+    model.chat: ollama
+    model.embedding: ollama
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        model: ${OLLAMA_CHAT_MODEL:llama3.2:3b}
+        think: false
+        options.temperature: 0.2
+      embedding:
+        model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
+    google.genai:
+      chat.enabled: false
+      embedding.enabled: false

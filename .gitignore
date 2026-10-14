@@ -1,0 +1,67 @@
+# ==========================================
+# Compiled Java Class Files & Packaging
+# ==========================================
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# ==========================================
+# Maven Build Output Directory
+# ==========================================
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# ==========================================
+# Environment & Secrets (Crucial for Spring)
+# ==========================================
+.env
+.env.local
+*.env
+*.pem
+*.key
+*.p12
+*.jks
+
+# ==========================================
+# Application & Log Files
+# ==========================================
+*.log
+logs/
+log/
+
+# ==========================================
+# IDE & Editor Specific Files
+# ==========================================
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+bin/
+
+# Visual Studio Code
+.vscode/
+
+# macOS / OS Specific Files
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# Crash Logs & Heap Dumps
+# ==========================================
+hs_err_pid*
+replay_pid*
+*.hprof

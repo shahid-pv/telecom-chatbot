@@ -1,0 +1,29 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: skytel
+      POSTGRES_USER: skytel
+      POSTGRES_PASSWORD: skytel
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skytel -d skytel"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes: ["skytel_data:/var/lib/postgresql/data"]
+
+  app:
+    build: .
+    container_name: spring-app
+    ports:
+      - "8080:8080"
+    environment:
+      # Use the service name 'db' as the host
+      DB_URL: jdbc:postgresql://db:5432/skytel
+      DB_USER: skytel
+      DB_PASSWORD: skytel
+    depends_on:
+      - db
+volumes:
+  skytel_data:

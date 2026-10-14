@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SkyTel Support Demo</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+	<main class="app">
+		<header>
+			<div class="brand">SkyTel</div>
+			<div>
+				<h1>
+					SkyTel Support <small>(Demo, sample data only)</small>
+				</h1>
+				<p>Demo with sample data. Read-only. · First load may take up to
+					a minute on the free server.</p>
+			</div>
+		</header>
+		<section class="login">
+			<div>
+				<strong>Try as demo customer</strong>
+				<div id="customers"></div>
+			</div>
+			<button id="logout">Logout</button>
+			<span id="me">Guest mode</span>
+		</section>
+		<section class="samples">
+			<button>What plans do you have?</button>
+			<button>What's my balance?</button>
+			<button>Why was I charged yesterday?</button>
+			<button>How do I deactivate my SIM?</button>
+			<button>Suggest a cheaper plan</button>
+		</section>
+		<section id="messages" aria-live="polite"></section>
+		<div id="typing" hidden>SkyTel is typing…</div>
+		<form id="form">
+			<input id="message" maxlength="500"
+				placeholder="Ask SkyTel a question…" required>
+			<button>Send</button>
+		</form>
+	</main>
+	<script src="/app.js"></script>
+</body>
+</html>

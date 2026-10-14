@@ -1,0 +1,27 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.model.ollama.autoconfigure.OllamaChatAutoConfiguration
+      - org.springframework.ai.model.ollama.autoconfigure.OllamaEmbeddingAutoConfiguration
+  ai:
+    model:
+      chat: google-genai
+      embedding:
+        text: google-genai
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}
+        chat:
+          options:
+            model: ${GEMINI_CHAT_MODEL:gemini-3.1-flash-lite}
+            temperature: 0
+            thinking-budget: 0
+        embedding:
+          api-key: ${GEMINI_API_KEY}
+          text:
+            options:
+              model: ${GEMINI_EMBEDDING_MODEL:gemini-embedding-2}
+              dimensions: ${VECTOR_DIMENSIONS:768}

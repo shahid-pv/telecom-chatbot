@@ -1,0 +1,176 @@
+:root {
+	font: 16px system-ui, sans-serif;
+	color: #17243b;
+	background: #f2f6fb
+}
+
+* {
+	box-sizing: border-box
+}
+
+body {
+	margin: 0
+}
+
+.app {
+	max-width: 850px;
+	margin: 24px auto;
+	padding: 20px;
+	background: white;
+	border-radius: 18px;
+	box-shadow: 0 12px 45px #183b5c18
+}
+
+header {
+	display: flex;
+	gap: 15px;
+	align-items: center;
+	border-bottom: 1px solid #e5eaf0;
+	padding-bottom: 16px
+}
+
+.brand {
+	background: #0567d8;
+	color: white;
+	padding: 14px;
+	border-radius: 12px;
+	font-weight: 800
+}
+
+h1 {
+	margin: 0;
+	font-size: 1.35rem
+}
+
+h1 small {
+	font-size: .78rem;
+	color: #64748b;
+	font-weight: 500
+}
+
+header p {
+	margin: 6px 0 0;
+	color: #64748b;
+	font-size: .85rem
+}
+
+.login {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	flex-wrap: wrap;
+	background: #eff7ff;
+	padding: 14px;
+	border-radius: 12px;
+	margin: 16px 0
+}
+
+.login strong {
+	display: block;
+	margin-bottom: 8px
+}
+
+#customers {
+	display: flex;
+	gap: 7px;
+	flex-wrap: wrap
+}
+
+.samples {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin: 14px 0
+}
+
+.samples button, .login button {
+	background: #e7f1ff;
+	color: #0756a5;
+	border: 0;
+	border-radius: 18px;
+	padding: 8px 12px;
+	cursor: pointer
+}
+
+#messages {
+	min-height: 270px;
+	max-height: 52vh;
+	overflow: auto;
+	padding: 12px 2px
+}
+
+.message {
+	max-width: 82%;
+	padding: 12px 15px;
+	margin: 10px 0;
+	border-radius: 14px;
+	white-space: pre-wrap
+}
+
+.user {
+	margin-left: auto;
+	background: #086bd8;
+	color: #fff
+}
+
+.bot {
+	background: #f0f3f7
+}
+
+.sources {
+	font-size: .75rem;
+	color: #52647c;
+	margin-top: 8px
+}
+
+.source {
+	display: inline-block;
+	background: #dcecff;
+	color: #0756a5;
+	border-radius: 12px;
+	padding: 3px 8px;
+	margin: 3px
+}
+
+form {
+	display: flex;
+	gap: 9px
+}
+
+input {
+	flex: 1;
+	border: 1px solid #cad5e1;
+	border-radius: 24px;
+	padding: 13px 17px;
+	font: inherit
+}
+
+form button {
+	border: 0;
+	border-radius: 22px;
+	background: #086bd8;
+	color: white;
+	padding: 0 22px;
+	font-weight: 700;
+	cursor: pointer
+}
+
+#typing {
+	color: #64748b;
+	padding: 6px
+}
+
+@media ( max-width :600px) {
+	.app {
+		margin: 0;
+		min-height: 100vh;
+		border-radius: 0;
+		padding: 14px
+	}
+	.message {
+		max-width: 94%
+	}
+	h1 {
+		font-size: 1.1rem
+	}
+}

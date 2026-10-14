@@ -1,0 +1,10 @@
+CREATE EXTENSION IF NOT EXISTS vector;
+CREATE TABLE plans (id BIGINT PRIMARY KEY, name VARCHAR(100) NOT NULL, type VARCHAR(16) NOT NULL CHECK(type IN ('PREPAID','POSTPAID')), price NUMERIC(10,2) NOT NULL, validity_days INTEGER NOT NULL, data_gb NUMERIC(8,2) NOT NULL, description TEXT NOT NULL);
+CREATE TABLE customers (id BIGINT PRIMARY KEY, name VARCHAR(100) NOT NULL, phone VARCHAR(32) NOT NULL, email VARCHAR(160) NOT NULL, plan_id BIGINT REFERENCES plans(id), balance NUMERIC(10,2) NOT NULL, plan_expiry DATE NOT NULL, data_used_mb INTEGER NOT NULL, status VARCHAR(24) NOT NULL);
+CREATE TABLE transactions (id BIGINT PRIMARY KEY, customer_id BIGINT NOT NULL REFERENCES customers(id), type VARCHAR(24) NOT NULL CHECK(type IN ('RECHARGE','PLAN_PURCHASE','ADDON_DEDUCTION','REFUND')), amount NUMERIC(10,2) NOT NULL, description TEXT NOT NULL, created_at TIMESTAMPTZ NOT NULL);
+CREATE TABLE active_services (id BIGINT PRIMARY KEY, customer_id BIGINT NOT NULL REFERENCES customers(id), name VARCHAR(100) NOT NULL, price NUMERIC(10,2) NOT NULL, status VARCHAR(24) NOT NULL, started_at TIMESTAMPTZ NOT NULL);
+CREATE INDEX idx_transactions_customer_created ON transactions(customer_id, created_at DESC);
+CREATE INDEX idx_transactions_created_at ON transactions(created_at DESC);
+CREATE INDEX idx_services_customer ON active_services(customer_id);
+CREATE TABLE vector_store (id UUID PRIMARY KEY, content TEXT NOT NULL, metadata JSON NOT NULL DEFAULT '{}', embedding vector(${vector_dimension}));
+CREATE INDEX vector_store_embedding_hnsw ON vector_store USING hnsw (embedding vector_cosine_ops);

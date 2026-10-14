@@ -1,0 +1,57 @@
+server:
+  port: ${PORT:8080}
+  shutdown: graceful
+spring:
+  application.name: skytel-readonly-demo
+  profiles.default: prod
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/skytel}
+    username: ${DB_USER:skytel}
+    password: ${DB_PASSWORD:skytel}
+    hikari:
+      maximum-pool-size: 4
+      minimum-idle: 0
+      connection-timeout: 10000
+      validation-timeout: 3000
+      connection-test-query: SELECT 1
+      initialization-fail-timeout: -1
+  jpa:
+    hibernate.ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    connect-retries: 8
+    connect-retries-interval: 2
+    placeholders.vector_dimension: ${VECTOR_DIMENSIONS:768}
+  ai:
+    retry:
+      max-attempts: 3
+      backoff:
+        initial-interval: 1s
+        max-interval: 4s
+        multiplier: 2
+    vectorstore.pgvector:
+      initialize-schema: false
+      dimensions: ${app.rag.dimensions:768}
+      index-type: HNSW
+      distance-type: COSINE_DISTANCE
+      batching-strategy: TOKEN_COUNT
+management:
+  endpoints.web.exposure.include: health
+  endpoint.health.show-details: never
+app:
+  ai.timeout-seconds: ${AI_TIMEOUT_SECONDS:45}
+  support.phone: ${SUPPORT_PHONE:1800-000-0000}
+  rag:
+    dimensions: ${VECTOR_DIMENSIONS:768}
+    top-k: ${RAG_TOP_K:5}
+    threshold: ${RAG_THRESHOLD:0.55}
+    batch-size: 8
+  rate-limit:
+    per-minute: ${RATE_LIMIT_PER_MINUTE:10}
+    per-day: ${RATE_LIMIT_PER_DAY:50}
+logging:
+  level:
+    org.springframework.ai: WARN
+    com.skytel: DEBUG
+
