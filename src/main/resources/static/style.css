@@ -173,4 +173,13 @@ form button {
 	h1 {
 		font-size: 1.1rem
 	}
-}
+	.login {
+		padding: 12px;
+		margin: 13px 0
+	}
+	.samples {
+		margin: 10px 0
+	}
+	.samples button, .login button {
+		padding: 7px 12px;
+	}}
