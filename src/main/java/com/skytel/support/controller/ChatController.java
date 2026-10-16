@@ -11,6 +11,7 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.*;
 import java.util.*;
 
+/** Exposes chat, customer selection, and session endpoints to the web client. */
 @RestController
 @RequestMapping("/api")
 public class ChatController {
@@ -26,6 +27,7 @@ public class ChatController {
 		chatMemory = m;
 	}
 
+	/** Replies to a chat message and saves the exchange in session history. */
 	@PostMapping("/chat")
 	public Map<String, Object> ask(@Valid @RequestBody ChatRequest req, HttpServletRequest request,
 			HttpSession session) {
@@ -38,12 +40,14 @@ public class ChatController {
 		return Map.of("reply", result.reply(), "sources", result.sources());
 	}
 
+	/** Lists the demo customers available to select in the interface. */
 	@GetMapping("/customers")
 	public List<Map<String, Object>> customers() {
 		return customers.findAll().stream().map(c -> Map.<String, Object>of("id", c.getId(), "name", c.getName()))
 				.toList();
 	}
 
+	/** Starts a demo customer session and clears any previous chat history. */
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest req, HttpSession s) {
 		if (!customers.existsById(req.customerId()))
@@ -53,6 +57,7 @@ public class ChatController {
 		return ResponseEntity.ok(me(s));
 	}
 
+	/** Ends the current session and clears its chat history. */
 	@PostMapping("/logout")
 	public Map<String, Object> logout(HttpSession s) {
 		chatMemory.clear(s.getId());
@@ -60,6 +65,7 @@ public class ChatController {
 		return Map.of("customerId", "");
 	}
 
+	/** Returns the customer currently associated with this session. */
 	@GetMapping("/me")
 	public Map<String, Object> me(HttpSession s) {
 		Object id = s.getAttribute("customerId");
@@ -70,9 +76,11 @@ public class ChatController {
 				.orElse(Map.of("guest", true));
 	}
 
+	/** Validated request body for a customer message. */
 	public record ChatRequest(@NotBlank @Size(max = 500) String message) {
 	}
 
+	/** Request body containing the demo customer to sign in as. */
 	public record LoginRequest(@NotNull Long customerId) {
 	}
 }

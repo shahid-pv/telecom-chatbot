@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+/** Maps an add-on or other service attached to a customer account. */
 @Entity
 @Table(name = "active_services")
 public class ActiveService {

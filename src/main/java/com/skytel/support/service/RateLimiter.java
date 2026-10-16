@@ -6,6 +6,7 @@ import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
 
+/** Limits how often one client address can send chat requests. */
 @Component
 public class RateLimiter {
 	@Value("${app.rate-limit.per-minute:10}")
@@ -14,6 +15,7 @@ public class RateLimiter {
 	int dayLimit = 50;
 	private final Map<String, Deque<Instant>> hits = new ConcurrentHashMap<>();
 
+	/** Records a request when the client is below both configured limits. */
 	public synchronized boolean allow(String ip) {
 		Instant now = Instant.now();
 		var q = hits.computeIfAbsent(ip, k -> new ArrayDeque<>());

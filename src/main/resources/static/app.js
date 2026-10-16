@@ -3,6 +3,13 @@ const messages = document.querySelector('#messages'),
     form = document.querySelector('#form'),
     typing = document.querySelector('#typing');
 
+input.addEventListener('focus', () => {
+    requestAnimationFrame(() => {
+        messages.scrollTop = messages.scrollHeight;
+        input.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    });
+});
+
 function bubble(text, who, sources = []) {
     const d = document.createElement('div');
     d.className = 'message ' + who;

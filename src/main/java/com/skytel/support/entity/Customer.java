@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/** Maps the customer account fields stored in the database. */
 @Entity
 @Table(name = "customers")
 public class Customer {

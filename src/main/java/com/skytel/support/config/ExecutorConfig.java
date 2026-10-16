@@ -5,8 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 
+/** Sets up the bounded thread pool used for chat provider calls. */
 @Configuration
 public class ExecutorConfig {
+	/** Creates the executor that runs potentially slow AI requests. */
 	@Bean(name = "chatExecutor")
 	Executor chatExecutor() {
 		var executor = new ThreadPoolTaskExecutor();

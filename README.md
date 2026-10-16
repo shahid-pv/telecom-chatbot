@@ -1,6 +1,6 @@
 # SkyTel Read-only Support Demo
 
-A small, fictional Java 21/Spring Boot 3 demo. It answers company policy questions from local documents using retrieval augmented generation (RAG), and personal questions with read-only tools scoped to the logged-in demo customer. Sample records are fake. No action endpoints exist.
+A small, fictional Java 25/Spring Boot 4 demo. It answers company policy questions from local documents using retrieval augmented generation (RAG), and personal questions with read-only tools scoped to the logged-in demo customer. Sample records are fake. No action endpoints exist.
 
 ## Architecture
 
@@ -24,7 +24,7 @@ Account data is exposed through read-only `@Tool` methods. The customer ID is pl
 
 ## Run locally
 
-Requirements: Java 21, Maven 3.9+, Docker, and Ollama.
+Requirements: Java 25, Maven 3.10+, Docker, and Ollama.
 
 ```bash
 docker compose up -d db

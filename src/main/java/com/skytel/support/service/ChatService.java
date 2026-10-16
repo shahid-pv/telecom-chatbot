@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+/** Builds customer support replies from account data and SkyTel reference material. */
 @Service
 public class ChatService {
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ChatService.class);
@@ -120,6 +121,12 @@ public class ChatService {
 		this.chatMemory = chatMemory;
 	}
 
+	/** Answers one customer message and includes the sources used for the reply.
+	 * @param message the customer's question
+	 * @param customerId the signed-in customer, or {@code null} in guest mode
+	 * @param conversationId the key used to load recent conversation history
+	 * @return the reply and any reference sources
+	 */
 	public Result answer(String message, Long customerId, String conversationId) {
 		log.debug("chat service: {} ", message);
 		log.debug("coversation id: {} ", conversationId);
@@ -269,6 +276,7 @@ public class ChatService {
 	}
 	
 	
+	/** Returns a short response for greetings and other simple conversation. */
 	private String smallTalkReply(String cleaned) {
 		
 		
@@ -289,6 +297,7 @@ public class ChatService {
 	    return null;
 	}
 
+	/** Holds a customer-facing reply and the reference sources behind it. */
 	public record Result(String reply, List<String> sources) {
 	}
 }

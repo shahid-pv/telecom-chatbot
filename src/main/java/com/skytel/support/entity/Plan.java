@@ -3,6 +3,7 @@ package com.skytel.support.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
+/** Maps a mobile plan from the plans catalog. */
 @Entity
 @Table(name = "plans")
 public class Plan {

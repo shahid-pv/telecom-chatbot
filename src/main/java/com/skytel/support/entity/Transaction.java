@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+/** Maps a billing or recharge transaction for a customer account. */
 @Entity
 @Table(name = "transactions")
 public class Transaction {

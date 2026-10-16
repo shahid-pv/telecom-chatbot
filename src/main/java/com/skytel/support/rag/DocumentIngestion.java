@@ -12,10 +12,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.slf4j.*;
 import java.util.*;
 
+/** Loads SkyTel reference files into the vector store when it is empty. */
 @Configuration
 public class DocumentIngestion {
 	private static final Logger log = LoggerFactory.getLogger(DocumentIngestion.class);
 
+	/** Creates the startup task that reads, splits, and stores support documents. */
 	@Bean
 	ApplicationRunner ingest(VectorStore store, JdbcTemplate jdbc) {
 		return args -> {
@@ -29,7 +31,9 @@ public class DocumentIngestion {
 			if (count != null && count > 0)
 				return;
 			var resolver = new PathMatchingResourcePatternResolver();
-			var splitter = new TokenTextSplitter(700, 350, 5, 10000, true, List.of('.', '?', '!', '\n'));
+			var splitter = TokenTextSplitter.builder().withChunkSize(700).withMinChunkSizeChars(350)
+					.withMinChunkLengthToEmbed(5).withMaxNumChunks(10000).withKeepSeparator(true)
+					.withPunctuationMarks(List.of('.', '?', '!', '\n')).build();
 			List<Document> docs = new ArrayList<>();
 			for (Resource r : resolver.getResources("classpath:/docs/*")) {
 				try {
