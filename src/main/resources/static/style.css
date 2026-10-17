@@ -195,6 +195,18 @@ form button {
 	background: #10233b99;
 }
 
+#documents-dialog.fallback[open] {
+	display: block;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin: 0;
+	transform: translate(-50%, -50%);
+	overflow: auto;
+	z-index: 1000;
+	box-shadow: 0 0 0 100vmax #10233b99, 0 12px 45px #183b5c40;
+}
+
 .documents-header {
 	position: sticky;
 	top: -20px;

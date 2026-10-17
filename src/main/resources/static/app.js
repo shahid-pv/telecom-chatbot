@@ -4,11 +4,31 @@ const messages = document.querySelector('#messages'),
     typing = document.querySelector('#typing');
 
 const documentsDialog = document.querySelector('#documents-dialog');
+function openDocumentsDialog() {
+    if (typeof documentsDialog.showModal === 'function') {
+        try {
+            documentsDialog.showModal();
+            return;
+        } catch {
+            // Fall back to an open dialog for browsers with partial dialog support.
+        }
+    }
+    documentsDialog.classList.add('fallback');
+    documentsDialog.setAttribute('open', '');
+}
+function closeDocumentsDialog() {
+    if (typeof documentsDialog.close === 'function' && documentsDialog.open) {
+        documentsDialog.close();
+    } else {
+        documentsDialog.removeAttribute('open');
+    }
+    documentsDialog.classList.remove('fallback');
+}
 document.querySelector('#open-documents').addEventListener('click', async event => {
     event.preventDefault();
     const list = document.querySelector('#documents-list');
     list.replaceChildren();
-    documentsDialog.showModal();
+    openDocumentsDialog();
     try {
         const documents = await get('/api/documents');
         documents.forEach(documentInfo => {
@@ -27,9 +47,9 @@ document.querySelector('#open-documents').addEventListener('click', async event 
         list.textContent = 'Support documents could not be loaded. Please try again.';
     }
 });
-document.querySelector('#close-documents').addEventListener('click', () => documentsDialog.close());
+document.querySelector('#close-documents').addEventListener('click', closeDocumentsDialog);
 documentsDialog.addEventListener('click', event => {
-    if (event.target === documentsDialog) documentsDialog.close();
+    if (event.target === documentsDialog) closeDocumentsDialog();
 });
 
 input.addEventListener('focus', () => {
