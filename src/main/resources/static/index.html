@@ -14,7 +14,7 @@
 				<h1>
 					SkyTel Support Demo
 				</h1>
-				<p>Chat as guest or select a user</p>
+				<p>Chat as guest or select a user · <a id="open-documents" href="#documents-dialog">Support PDFs</a></p>
 			</div>
 		</header>
 		<section class="login">
@@ -40,6 +40,13 @@
 			<button>Send</button>
 		</form>
 	</main>
+	<dialog id="documents-dialog" aria-labelledby="documents-title">
+		<div class="documents-header">
+			<h2 id="documents-title">Support documents</h2>
+			<button id="close-documents" type="button" aria-label="Close support documents">Close</button>
+		</div>
+		<div id="documents-list" class="documents-list"></div>
+	</dialog>
 	<script src="/app.js"></script>
 </body>
 </html>

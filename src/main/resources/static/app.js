@@ -3,6 +3,35 @@ const messages = document.querySelector('#messages'),
     form = document.querySelector('#form'),
     typing = document.querySelector('#typing');
 
+const documentsDialog = document.querySelector('#documents-dialog');
+document.querySelector('#open-documents').addEventListener('click', async event => {
+    event.preventDefault();
+    const list = document.querySelector('#documents-list');
+    list.replaceChildren();
+    documentsDialog.showModal();
+    try {
+        const documents = await get('/api/documents');
+        documents.forEach(documentInfo => {
+            const section = document.createElement('section');
+            section.className = 'document';
+            const title = document.createElement('h3');
+            title.textContent = documentInfo.name.replace(/\.pdf$/i, '').replace(/[-_]/g, ' ');
+            const frame = document.createElement('iframe');
+            frame.title = title.textContent;
+            frame.src = documentInfo.url;
+            section.append(title, frame);
+            list.append(section);
+        });
+        if (!documents.length) list.textContent = 'No support documents are available.';
+    } catch {
+        list.textContent = 'Support documents could not be loaded. Please try again.';
+    }
+});
+document.querySelector('#close-documents').addEventListener('click', () => documentsDialog.close());
+documentsDialog.addEventListener('click', event => {
+    if (event.target === documentsDialog) documentsDialog.close();
+});
+
 input.addEventListener('focus', () => {
     requestAnimationFrame(() => {
         messages.scrollTop = messages.scrollHeight;

@@ -160,6 +160,76 @@ form button {
 	padding: 6px
 }
 
+#open-documents, #close-documents {
+	border: 0;
+	border-radius: 18px;
+	background: #e7f1ff;
+	color: #0756a5;
+	padding: 8px 12px;
+	font: inherit;
+	cursor: pointer;
+}
+
+#open-documents {
+	border: 0;
+	background: none;
+	padding: 0;
+	font: inherit;
+	white-space: nowrap;
+	color: #0756a5;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#documents-dialog {
+	width: min(900px, calc(100vw - 32px));
+	max-width: none;
+	max-height: 90vh;
+	padding: 20px;
+	border: 0;
+	border-radius: 16px;
+	box-shadow: 0 12px 45px #183b5c40;
+}
+
+#documents-dialog::backdrop {
+	background: #10233b99;
+}
+
+.documents-header {
+	position: sticky;
+	top: -20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	margin: -20px -20px 16px;
+	padding: 14px 20px;
+	background: white;
+	border-bottom: 1px solid #e5eaf0;
+}
+
+.documents-header h2, .document h3 {
+	margin: 0;
+}
+
+.documents-list {
+	display: grid;
+	gap: 18px;
+}
+
+.document h3 {
+	margin-bottom: 8px;
+	font-size: 1rem;
+}
+
+.document iframe {
+	display: block;
+	width: 100%;
+	height: min(70vh, 650px);
+	border: 1px solid #d7e0ea;
+	border-radius: 8px;
+}
+
 @media ( max-width :600px) {
 	.app {
 		margin: 0;
@@ -173,6 +243,31 @@ form button {
 	h1 {
 		font-size: 1.1rem
 	}
+	header {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		column-gap: 10px;
+		align-items: center;
+	}
+	.brand {
+		grid-column: 1;
+		grid-row: 1;
+		padding: 12px;
+	}
+	header > div:not(.brand) {
+		grid-column: 2;
+		grid-row: 1;
+		min-width: 0;
+	}
+	header h1 {
+		line-height: 1.2;
+	}
+	header p {
+		line-height: 1.35;
+	}
+	#open-documents {
+		font-size: .85rem;
+	}
 	.login {
 		padding: 12px;
 		margin: 13px 0
@@ -180,6 +275,28 @@ form button {
 	.samples {
 		margin: 10px 0
 	}
+	.samples {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		-webkit-overflow-scrolling: touch;
+		padding-bottom: 4px;
+	}
 	.samples button, .login button {
 		padding: 7px 12px;
-	}}
+	}
+	.samples button {
+		flex: 0 0 auto;
+		white-space: nowrap;
+	}
+	#documents-dialog {
+		width: calc(100vw - 20px);
+		max-height: 94vh;
+		padding: 14px;
+	}
+	.documents-header {
+		top: -14px;
+		margin: -14px -14px 14px;
+		padding: 12px 14px;
+	}
+}
