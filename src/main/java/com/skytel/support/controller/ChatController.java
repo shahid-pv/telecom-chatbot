@@ -37,7 +37,8 @@ public class ChatController {
 		String conversation = session.getId();
 		var result = chat.answer(req.message(), id, conversation);
 		chatMemory.add(conversation, List.of(new UserMessage(req.message()), new AssistantMessage(result.reply())));
-		return Map.of("reply", result.reply(), "sources", result.sources());
+		//return Map.of("reply", result.reply(), "sources", result.sources());
+		return Map.of("reply", result.reply());
 	}
 
 	/** Lists the demo customers available to select in the interface. */

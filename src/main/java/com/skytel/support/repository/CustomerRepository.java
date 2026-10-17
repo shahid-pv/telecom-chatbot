@@ -11,7 +11,7 @@ import java.util.*;
 @org.springframework.transaction.annotation.Transactional(readOnly = true)
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 	/** Loads all customers for the demo account picker. */
-	@Query("select c from Customer c")
+	@Query("select c from Customer c order by c.id")
 	List<Customer> findAllReadOnly();
 
 	/** Finds one customer without opening a write transaction. */

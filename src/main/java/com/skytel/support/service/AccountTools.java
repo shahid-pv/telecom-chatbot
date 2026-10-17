@@ -13,6 +13,9 @@ import java.util.*;
 @Component
 @Transactional(readOnly = true)
 public class AccountTools {
+	
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AccountTools.class);
+	
 	private final CustomerRepository customers;
 	private final PlanRepository plans;
 	private final TransactionRepository transactions;
@@ -34,19 +37,26 @@ public class AccountTools {
 	@Tool(description = "Read the logged-in customer's current prepaid balance. Never use an id from the user.")
 	/** Returns the signed-in customer's prepaid balance. */
 	public String getBalance(ToolContext c) {
-		return current(c).map(x -> "Balance: ₹" + x.getBalance()).orElse("Not logged in or customer unavailable.");
+		log.debug("fetching balance of user");
+		return current(c).map(x -> "Account holder name: "+x.getName()+ ",Balance: ₹" + x.getBalance()).orElse("Not logged in or customer unavailable.");
 	}
 
 	@Tool(description = "Read mobile data used in MB for the logged-in customer.")
 	/** Returns how much mobile data the signed-in customer has used. */
 	public String getDataUsage(ToolContext c) {
-		return current(c).map(x -> "Data used: " + x.getDataUsedMb() + " MB")
+		log.debug("fetching data usage of user");
+		return current(c)
+				.map(x -> "Account holder name: " + x.getName() + ", Data used for today: " + x.getDataUsedDailyMb()
+						+ " MB, Data used for last 30 days: " + x.getDataUsedMb() + " MB")
 				.orElse("Not logged in or customer unavailable.");
 	}
+	
 
-	@Tool(description = "List transactions for the logged-in customer between ISO dates yyyy-MM-dd. Use today when the user says yesterday.")
+	//@Tool(description = "List transactions for the logged-in customer between ISO dates yyyy-MM-dd. Use today when the user says yesterday.")
+	@Tool(description = "List transactions for the logged-in customer between ISO dates yyyy-MM-dd (e.g., 2026-12-31). The current year is 2026. Always calculate exact yyyy-MM-dd strings accurately")
 	/** Lists the customer's transactions within the requested date range. */
 	public String getTransactions(String fromDate, String toDate, ToolContext c) {
+		log.debug("fetching transaction of user between dates {} : {} ", fromDate, toDate);
 		var u = current(c);
 		if (u.isEmpty())
 			return "Not logged in.";
@@ -54,9 +64,12 @@ public class AccountTools {
 			var a = LocalDate.parse(fromDate).atStartOfDay(ZoneId.systemDefault()).toOffsetDateTime();
 			var b = LocalDate.parse(toDate).plusDays(1).atStartOfDay(ZoneId.systemDefault()).toOffsetDateTime();
 			var rows = transactions.byDate(u.get().getId(), a, b);
-			return rows.isEmpty() ? "No transactions found."
+			
+			
+			String transactions= rows.isEmpty() ? "No transactions found."
 					: rows.stream().map(t -> t.getCreatedAt() + " " + t.getType() + " ₹" + t.getAmount() + " — "
 							+ t.getDescription()).toList().toString();
+			return transactions;
 		} catch (Exception e) {
 			return "Date range unavailable.";
 		}
@@ -65,28 +78,30 @@ public class AccountTools {
 	@Tool(description = "Read the current plan and expiry date of the logged-in customer.")
 	/** Returns the signed-in customer's current plan and expiry date. */
 	public String getActivePlan(ToolContext c) {
-		System.out.println("getActivePlan");
+		log.debug("fetching active plan of user");
 		return current(c).map(u -> plans.findById(u
 				.getPlanId())
 				.map(p -> "Account holder name: "+u.getName()+ ", Active plan : "+ p.getName() + ", ₹" + p.getPrice() + ", expires " + u.getPlanExpiry())
-				//.map(p -> "No plan data.")
 				.orElse("No plan data.")).orElse("Not logged in.");
 	}
 
 	@Tool(description = "List active read-only services for the logged-in customer.")
 	/** Lists the customer's active read-only services. */
 	public String getActiveServices(ToolContext c) {
+		log.debug("fetching active services of user");
 		var u = current(c);
 		return u.map(x -> {
 			var r = services.activeFor(x.getId());
-			return r.isEmpty() ? "No active services."
+			var services=  r.isEmpty() ? "No active services."
 					: r.stream().map(s -> s.getName() + " ₹" + s.getPrice()).toList().toString();
+			return services;
 		}).orElse("Not logged in.");
 	}
 
 	@Tool(description = "Suggest plans from the plans catalog based on the logged-in customer's usage. This does not change their plan.")
 	/** Suggests catalog plans based on the customer's recorded data usage. */
 	public String recommendPlans(ToolContext c) {
+		log.debug("fetching recommended plans of user");
 		return current(c)
 				.map(u -> "Customer usage " + u.getDataUsedMb() + "MB. Available plans: "
 						+ plans.findAllByOrderByPriceAsc().stream()

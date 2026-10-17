@@ -21,6 +21,8 @@ public class Customer {
 	@Column(name = "data_used_mb")
 	private Integer dataUsedMb;
 	private String status;
+	@Column(name = "data_used_daily_mb")
+	private Integer dataUsedDailyMb;
 
 	protected Customer() {
 	}
@@ -60,4 +62,8 @@ public class Customer {
 	public String getStatus() {
 		return status;
 	}
+	public Integer getDataUsedDailyMb() {
+		return dataUsedDailyMb;
+	}
+	
 }
