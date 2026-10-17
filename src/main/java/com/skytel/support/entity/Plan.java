@@ -1,7 +1,11 @@
 package com.skytel.support.entity;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 /** Maps a mobile plan from the plans catalog. */
 @Entity

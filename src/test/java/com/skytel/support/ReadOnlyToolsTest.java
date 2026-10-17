@@ -1,34 +1,49 @@
 package com.skytel.support;
 
-import com.skytel.support.repository.*;
-import com.skytel.support.service.AccountTools;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.chat.model.ToolContext;
-import java.util.Map;
-import java.math.BigDecimal;
-import java.util.Optional;
-import com.skytel.support.entity.Customer;
+import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.test.util.ReflectionTestUtils;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+
+import com.skytel.support.entity.Customer;
+import com.skytel.support.repository.ActiveServiceRepository;
+import com.skytel.support.repository.CustomerRepository;
+import com.skytel.support.repository.PlanRepository;
+import com.skytel.support.repository.TransactionRepository;
+import com.skytel.support.service.AccountTools;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 class ReadOnlyToolsTest {
-    @Test void guestIsRefusedByAccountTools() {
+    @Test
+    void guestIsRefusedByAccountTools() {
         var customers = mock(CustomerRepository.class);
         var tools = new AccountTools(customers, mock(PlanRepository.class), mock(TransactionRepository.class), mock(ActiveServiceRepository.class));
         assertEquals("Not logged in or customer unavailable.", tools.getBalance(new ToolContext(Map.of())));
         verifyNoInteractions(customers);
     }
 
-    @Test void customerIdIsNeverAnLlmVisibleToolArgument() {
+    @Test
+    void customerIdIsNeverAnLlmVisibleToolArgument() {
         for (var method : AccountTools.class.getDeclaredMethods()) {
-            if (method.isAnnotationPresent(org.springframework.ai.tool.annotation.Tool.class)) {
-                assertTrue(java.util.Arrays.stream(method.getParameterTypes()).noneMatch(Long.class::equals));
+            if (method.isAnnotationPresent(Tool.class)) {
+                assertTrue(Arrays.stream(method.getParameterTypes()).noneMatch(Long.class::equals));
             }
         }
     }
 
-    @Test void balanceUsesOnlyCustomerIdFromToolContext() throws Exception {
+    @Test
+    void balanceUsesOnlyCustomerIdFromToolContext() throws Exception {
         var customers = mock(CustomerRepository.class);
         var constructor = Customer.class.getDeclaredConstructor();
         constructor.setAccessible(true);

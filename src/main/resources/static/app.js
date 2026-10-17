@@ -1,9 +1,10 @@
-const messages = document.querySelector('#messages'),
-    input = document.querySelector('#message'),
-    form = document.querySelector('#form'),
-    typing = document.querySelector('#typing');
+const messages = document.querySelector('#messages');
+const input = document.querySelector('#message');
+const form = document.querySelector('#form');
+const typing = document.querySelector('#typing');
 
 const documentsDialog = document.querySelector('#documents-dialog');
+
 function openDocumentsDialog() {
     if (typeof documentsDialog.showModal === 'function') {
         try {
@@ -16,6 +17,7 @@ function openDocumentsDialog() {
     documentsDialog.classList.add('fallback');
     documentsDialog.setAttribute('open', '');
 }
+
 function closeDocumentsDialog() {
     if (typeof documentsDialog.close === 'function' && documentsDialog.open) {
         documentsDialog.close();
@@ -24,6 +26,7 @@ function closeDocumentsDialog() {
     }
     documentsDialog.classList.remove('fallback');
 }
+
 document.querySelector('#open-documents').addEventListener('click', async event => {
     event.preventDefault();
     const list = document.querySelector('#documents-list');
@@ -42,14 +45,19 @@ document.querySelector('#open-documents').addEventListener('click', async event 
             section.append(title, frame);
             list.append(section);
         });
-        if (!documents.length) list.textContent = 'No support documents are available.';
+        if (!documents.length) {
+            list.textContent = 'No support documents are available.';
+        }
     } catch {
         list.textContent = 'Support documents could not be loaded. Please try again.';
     }
 });
+
 document.querySelector('#close-documents').addEventListener('click', closeDocumentsDialog);
 documentsDialog.addEventListener('click', event => {
-    if (event.target === documentsDialog) closeDocumentsDialog();
+    if (event.target === documentsDialog) {
+        closeDocumentsDialog();
+    }
 });
 
 input.addEventListener('focus', () => {
@@ -59,82 +67,92 @@ input.addEventListener('focus', () => {
     });
 });
 
-function bubble(text, who, sources = []) {
-    const d = document.createElement('div');
-    d.className = 'message ' + who;
-    d.textContent = text;
+function bubble(text, speaker, sources = []) {
+    const bubbleElement = document.createElement('div');
+    bubbleElement.className = 'message ' + speaker;
+    bubbleElement.textContent = text;
     if (sources.length) {
-        const s = document.createElement('div');
-        s.className = 'sources';
-        s.textContent = 'Sources: ';
-        sources.forEach(x => {
-            const c = document.createElement('span');
-            c.className = 'source';
-            c.textContent = x;
-            s.append(c)
+        const sourcesElement = document.createElement('div');
+        sourcesElement.className = 'sources';
+        sourcesElement.textContent = 'Sources: ';
+        sources.forEach(source => {
+            const sourceElement = document.createElement('span');
+            sourceElement.className = 'source';
+            sourceElement.textContent = source;
+            sourcesElement.append(sourceElement);
         });
-        d.append(s)
+        bubbleElement.append(sourcesElement);
     }
-    messages.append(d);
-    messages.scrollTop = messages.scrollHeight
+    messages.append(bubbleElement);
+    messages.scrollTop = messages.scrollHeight;
 }
-async function get(url, opts = {}) {
-    const r = await fetch(url, {
+
+async function get(url, options = {}) {
+    const response = await fetch(url, {
         headers: {
             'Content-Type': 'application/json'
         },
-        ...opts
+        ...options
     });
-    return r.json()
+    return response.json();
 }
+
 async function refresh() {
-    const [cs, me] = await Promise.all([get('/api/customers'), get('/api/me')]);
-    const root = document.querySelector('#customers');
-    root.replaceChildren(...cs.map(c => {
-        const b = document.createElement('button');
-        b.textContent = c.name;
-        b.onclick = async () => {
+    const [customers, currentUser] = await Promise.all([get('/api/customers'), get('/api/me')]);
+    const customerRoot = document.querySelector('#customers');
+    customerRoot.replaceChildren(...customers.map(customer => {
+        const customerButton = document.createElement('button');
+        customerButton.textContent = customer.name;
+        customerButton.onclick = async () => {
             await get('/api/login', {
                 method: 'POST',
                 body: JSON.stringify({
-                    customerId: c.id
+                    customerId: customer.id
                 })
             });
-            refresh()
+            refresh();
         };
-        return b
+        return customerButton;
     }));
-    document.querySelector('#me').textContent = me.guest ? 'Guest mode' : `Logged in as ${me.name}`
+    document.querySelector('#me').textContent = currentUser.guest ? 'Guest mode' : `Logged in as ${currentUser.name}`;
 }
+
 document.querySelector('#logout').onclick = async () => {
     await get('/api/logout', {
         method: 'POST'
     });
-    refresh()
+    refresh();
 };
-document.querySelectorAll('.samples button').forEach(b => b.onclick = () => {
-    input.value = b.textContent;
-    form.requestSubmit()
+
+document.querySelectorAll('.samples button').forEach(button => {
+    button.onclick = () => {
+        input.value = button.textContent;
+        form.requestSubmit();
+    };
 });
-form.onsubmit = async e => {
-    e.preventDefault();
+
+form.onsubmit = async event => {
+    event.preventDefault();
     const message = input.value.trim();
-    if (!message) return;
+    if (!message) {
+        return;
+    }
     input.value = '';
     bubble(message, 'user');
     typing.hidden = false;
     try {
-        const r = await get('/api/chat', {
+        const response = await get('/api/chat', {
             method: 'POST',
             body: JSON.stringify({
                 message
             })
         });
-        bubble(r.reply || r.error, 'bot', r.sources || [])
+        bubble(response.reply || response.error, 'bot', response.sources || []);
     } catch {
-        bubble('Sorry, SkyTel support is temporarily unavailable.', 'bot')
+        bubble('Sorry, SkyTel support is temporarily unavailable.', 'bot');
     } finally {
-        typing.hidden = true
+        typing.hidden = true;
     }
 };
+
 refresh();

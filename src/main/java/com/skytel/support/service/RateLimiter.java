@@ -1,10 +1,14 @@
 package com.skytel.support.service;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import java.time.*;
-import java.util.*;
-import java.util.concurrent.*;
 
 /** Limits how often one client address can send chat requests. */
 @Component
@@ -18,13 +22,17 @@ public class RateLimiter {
 	/** Records a request when the client is below both configured limits. */
 	public synchronized boolean allow(String ip) {
 		Instant now = Instant.now();
-		var q = hits.computeIfAbsent(ip, k -> new ArrayDeque<>());
-		while (!q.isEmpty() && q.peekFirst().isBefore(now.minus(Duration.ofDays(1))))
-			q.removeFirst();
-		long minute = q.stream().filter(t -> t.isAfter(now.minusSeconds(60))).count();
-		if (minute >= minuteLimit || q.size() >= dayLimit)
+		var requestTimes = hits.computeIfAbsent(ip, key -> new ArrayDeque<>());
+		while (!requestTimes.isEmpty()
+				&& requestTimes.peekFirst().isBefore(now.minus(Duration.ofDays(1)))) {
+			requestTimes.removeFirst();
+		}
+		long requestsThisMinute = requestTimes.stream()
+				.filter(timestamp -> timestamp.isAfter(now.minusSeconds(60))).count();
+		if (requestsThisMinute >= minuteLimit || requestTimes.size() >= dayLimit) {
 			return false;
-		q.addLast(now);
+		}
+		requestTimes.addLast(now);
 		return true;
 	}
 }

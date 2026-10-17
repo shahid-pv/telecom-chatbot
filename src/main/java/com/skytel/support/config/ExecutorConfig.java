@@ -1,9 +1,10 @@
 package com.skytel.support.config;
 
+import java.util.concurrent.Executor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import java.util.concurrent.Executor;
 
 /** Sets up the bounded thread pool used for chat provider calls. */
 @Configuration

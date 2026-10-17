@@ -1,8 +1,12 @@
 package com.skytel.support.entity;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 /** Maps the customer account fields stored in the database. */
 @Entity
@@ -62,8 +66,8 @@ public class Customer {
 	public String getStatus() {
 		return status;
 	}
+
 	public Integer getDataUsedDailyMb() {
 		return dataUsedDailyMb;
 	}
-	
 }

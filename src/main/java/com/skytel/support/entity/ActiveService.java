@@ -1,8 +1,12 @@
 package com.skytel.support.entity;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 /** Maps an add-on or other service attached to a customer account. */
 @Entity
