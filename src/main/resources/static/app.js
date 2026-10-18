@@ -4,6 +4,19 @@ const form = document.querySelector('#form');
 const typing = document.querySelector('#typing');
 
 const documentsDialog = document.querySelector('#documents-dialog');
+let chatScrollFrame;
+
+function scrollChatToBottom() {
+    if (chatScrollFrame) {
+        cancelAnimationFrame(chatScrollFrame);
+    }
+    chatScrollFrame = requestAnimationFrame(() => {
+        messages.scrollTop = messages.scrollHeight;
+        if (document.activeElement === input) {
+            input.scrollIntoView({ behavior: 'auto', block: 'end' });
+        }
+    });
+}
 
 function openDocumentsDialog() {
     if (typeof documentsDialog.showModal === 'function') {
@@ -61,11 +74,24 @@ documentsDialog.addEventListener('click', event => {
 });
 
 input.addEventListener('focus', () => {
-    requestAnimationFrame(() => {
-        messages.scrollTop = messages.scrollHeight;
-        input.scrollIntoView({ behavior: 'smooth', block: 'end' });
-    });
+    scrollChatToBottom();
+    // The on-screen keyboard changes the visual viewport after focus fires.
+    window.setTimeout(scrollChatToBottom, 250);
 });
+
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+        if (document.activeElement === input) {
+            scrollChatToBottom();
+        }
+    });
+} else {
+    window.addEventListener('resize', () => {
+        if (document.activeElement === input) {
+            scrollChatToBottom();
+        }
+    });
+}
 
 function bubble(text, speaker, sources = []) {
     const bubbleElement = document.createElement('div');
