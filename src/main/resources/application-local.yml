@@ -6,6 +6,7 @@ spring:
     exclude:
       - org.springframework.ai.model.google.genai.autoconfigure.embedding.GoogleGenAiTextEmbeddingAutoConfiguration
       - org.springframework.ai.model.google.genai.autoconfigure.embedding.GoogleGenAiEmbeddingConnectionAutoConfiguration
+      - org.springframework.ai.model.google.genai.autoconfigure.chat.GoogleGenAiChatAutoConfiguration
   ai:
     model.chat: ollama
     model.embedding: ollama
@@ -20,3 +21,6 @@ spring:
     google.genai:
       chat.enabled: false
       embedding.enabled: false
+app:
+  rag:
+    threshold: ${RAG_THRESHOLD:0.3}

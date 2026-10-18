@@ -3,7 +3,7 @@ server:
   shutdown: graceful
 spring:
   application.name: skytel-readonly-demo
-  profiles.default: prod
+  profiles.default: local
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/skytel}
     username: ${DB_USER:skytel}
