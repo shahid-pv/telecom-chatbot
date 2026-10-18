@@ -48,10 +48,12 @@ class ReadOnlyToolsTest {
         var constructor = Customer.class.getDeclaredConstructor();
         constructor.setAccessible(true);
         var customer = constructor.newInstance();
+        ReflectionTestUtils.setField(customer, "name", "Asha");
         ReflectionTestUtils.setField(customer, "balance", new BigDecimal("87.00"));
         when(customers.findByIdReadOnly(1L)).thenReturn(Optional.of(customer));
         var tools = new AccountTools(customers, mock(PlanRepository.class), mock(TransactionRepository.class), mock(ActiveServiceRepository.class));
-        assertEquals("Balance: ₹87.00", tools.getBalance(new ToolContext(Map.of("customerId", 1L))));
+        assertEquals("Account holder name: Asha,Balance: ₹87.00",
+                tools.getBalance(new ToolContext(Map.of("customerId", 1L))));
         verify(customers).findByIdReadOnly(1L);
     }
 }
