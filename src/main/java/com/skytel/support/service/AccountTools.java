@@ -80,7 +80,6 @@ public class AccountTools {
 							.map(transaction -> transaction.getCreatedAt() + " " + transaction.getType() + " ₹"
 									+ transaction.getAmount() + " — " + transaction.getDescription())
 							.toList().toString();
-			System.out.println(transactionDetails);
 			return transactionDetails;
 		} catch (Exception exception) {
 			return "Date range unavailable.";
